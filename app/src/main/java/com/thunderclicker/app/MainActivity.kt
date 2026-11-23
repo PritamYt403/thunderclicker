@@ -8,11 +8,12 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,9 +37,7 @@ fun ThunderClickerApp() {
     }
 
     MaterialTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize()
-        ) {
+        Surface(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -49,9 +48,7 @@ fun ThunderClickerApp() {
                     style = MaterialTheme.typography.headlineSmall
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text("Image Target Sequence")
+                Text("Image Target Manager")
 
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -61,44 +58,51 @@ fun ThunderClickerApp() {
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Select Target Image")
+                    Text("Add Image Target")
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-                Text("Selected Targets: ${targets.size}")
+                Text("Targets: ${targets.size}")
 
                 Spacer(modifier = Modifier.height(12.dp))
 
                 LazyColumn(
                     modifier = Modifier.weight(1f)
                 ) {
-                    items(targets.toList()) { image ->
+                    itemsIndexed(targets.toList()) { index, image ->
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 5.dp)
+                                .padding(vertical = 6.dp)
                         ) {
                             Column(
                                 modifier = Modifier.padding(12.dp)
                             ) {
-                                Text("Image Target")
+                                Text("Target ${index + 1}")
 
                                 Spacer(
-                                    modifier = Modifier.height(4.dp)
+                                    modifier = Modifier.height(8.dp)
                                 )
 
-                                Text(
-                                    image,
-                                    style = MaterialTheme.typography.bodySmall
+                                AsyncImage(
+                                    model = image,
+                                    contentDescription = "Target ${index + 1}",
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(180.dp)
+                                )
+
+                                Spacer(
+                                    modifier = Modifier.height(8.dp)
                                 )
 
                                 TextButton(
                                     onClick = {
-                                        targets.remove(image)
+                                        targets.removeAt(index)
                                     }
                                 ) {
-                                    Text("Remove")
+                                    Text("Remove Target")
                                 }
                             }
                         }
@@ -106,12 +110,10 @@ fun ThunderClickerApp() {
                 }
 
                 Button(
-                    onClick = {
-                        targets.clear()
-                    },
+                    onClick = { targets.clear() },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Clear Targets")
+                    Text("Clear All Images")
                 }
             }
         }
